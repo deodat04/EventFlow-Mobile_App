@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "557264628963",
+    "project_id": "eventflow-team-proj",
+    "storage_bucket": "eventflow-team-proj.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:557264628963:android:cfc1bda60d041bfedfe9d6",
+        "android_client_info": {
+          "package_name": "com.example.eventflow"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqq1GvMyPqnqBv2lvrGaDgH2RHxBUhDw8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,1240 @@
+#UserConnexion.dart //Page de connexion d'un utilisateur standard 
+
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:admin_base/OrgAuth/CreateOrg.dart';
+import 'package:admin_base/OrgAuth/OrgPage.dart';
+import 'package:admin_base/OrgAuth/Inscription_Connexion.dart';
+
+class UserCon extends StatefulWidget {
+  const UserCon ({super.key});
+
+  @override
+  State<UserCon> createState() => _UserConState();
+}
+
+class _UserConState extends State<UserCon> {
+  final formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool _obsureText = false;
+
+  void seeOrnot() {
+    setState(() {
+      _obsureText = !_obsureText;
+    });
+  }
+
+  int _selectedIndex=0;
+
+  void _redirectPage(int index){
+    /*Doit rediriger sur une page en fonction de l'index
+    Exemple:
+    if(index==0){
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context)=>CreateOrg())
+       );
+      }*/
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark(),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Se connecter"),
+          backgroundColor: Colors.yellow,
+        ),
+        body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                TextButton(
+                    onPressed:(){
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context)=>InsCon()),
+                       );
+                    },//L'action à faire sera de rediriger l'utilisateur sur la page d'accueil d'un utilisateur standard
+                    child:Text("Se connecter en tant qu'administrateur",
+                        style:TextStyle(
+                          decoration:TextDecoration.underline,
+                          decorationColor: Colors.yellow,
+                          decorationStyle:TextDecorationStyle.solid,
+                          color: Colors.yellow,
+                          fontSize: 16,
+                        )
+                    )
+                ),
+                Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        //Email
+                        TextFormField(
+                          keyboardType: TextInputType.text,
+                          controller: emailController,
+                          decoration: InputDecoration(
+                              icon: Icon(Icons.email),
+                              hintText: "example@gmail.com",
+                              labelText: "Email"),
+                          validator: (String? value) {
+                            if (value == null || value == "")
+                              return "Ce champ est obligatoire";
+                            return null;
+                          },
+                        ),
+                        //Password
+                        TextFormField(
+                          keyboardType: TextInputType.text,
+                          controller: passwordController,
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.lock),
+                            hintText: "mot de passe",
+                            labelText: "Mot de passe",
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obsureText
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.grey,
+                              ),
+                              onPressed: seeOrnot,
+                            ),
+                          ),
+                          obscureText: _obsureText,
+                          validator: (String? value) {
+                            if (value == null || value == "")
+                              return "Ce champ est obligatoire";
+                            return null;
+                          },
+                        ),
+                      ],
+                    )),
+                const SizedBox(height: 10.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            Fluttertoast.showToast(
+                                msg: "Connexion réussie",
+                                toastLength: Toast.LENGTH_LONG,
+                                gravity: ToastGravity.TOP,
+                                backgroundColor: Colors.black,
+                                textColor: Colors.yellow,
+                                fontSize: 16.0);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OrgPage(
+                                      firstname: "",
+                                      lastname: "",
+                                    )));
+                          }
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.yellow), // Couleur du bouton
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                              Colors.black), // Couleur du texte
+                          padding:
+                          MaterialStateProperty.all<EdgeInsetsGeometry>(
+                            EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 10.0),
+                          ), // Espacement interne
+                          shape: MaterialStateProperty.all<OutlinedBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  10.0), // Bordure arrondie
+                            ),
+                          ),
+                        ),
+                        child: const Text("Valider")),
+                  ],
+                ),
+              ],
+            )
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Accueil",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.payment),
+              label : "Ticket",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "Profil",
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.white,
+          onTap: _redirectPage,
+        ),
+      ),
+    );
+  }
+}
+
+----------------------------------------------
+
+#Inscription_Connexion.dart // Page de connexion de l'organisateur 
+
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'CreateOrg.dart';
+import 'OrgPage.dart';
+
+class InsCon extends StatefulWidget {
+  const InsCon({super.key});
+
+  @override
+  State<InsCon> createState() => _InsConState();
+}
+
+class _InsConState extends State<InsCon> {
+  final formKey = GlobalKey<FormState>();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  bool _obsureText = false;
+
+  void seeOrnot() {
+    setState(() {
+      _obsureText = !_obsureText;
+    });
+  }
+
+  int _selectedIndex=0;
+
+  void _redirectPage(int index){
+    /*Doit rediriger sur une page en fonction de l'index
+    Exemple:
+    if(index==0){
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context)=>CreateOrg())
+       );
+      }*/
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark(),
+      home: Scaffold(
+        appBar: AppBar(
+          title: Text("Se connecter"),
+          backgroundColor: Colors.yellow,
+        ),
+        body: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Form(
+                    key: formKey,
+                    child: Column(
+                      children: [
+                        //Email
+                        TextFormField(
+                          keyboardType: TextInputType.text,
+                          controller: emailController,
+                          decoration: InputDecoration(
+                              icon: Icon(Icons.email),
+                              hintText: "example@gmail.com",
+                              labelText: "Email"),
+                          validator: (String? value) {
+                            if (value == null || value == "")
+                              return "Ce champ est obligatoire";
+                            return null;
+                          },
+                        ),
+                        //Password
+                        TextFormField(
+                          keyboardType: TextInputType.text,
+                          controller: passwordController,
+                          decoration: InputDecoration(
+                            icon: Icon(Icons.lock),
+                            hintText: "mot de passe",
+                            labelText: "Mot de passe",
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                _obsureText
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: Colors.grey,
+                              ),
+                              onPressed: seeOrnot,
+                            ),
+                          ),
+                          obscureText: _obsureText,
+                          validator: (String? value) {
+                            if (value == null || value == "")
+                              return "Ce champ est obligatoire";
+                            return null;
+                          },
+                        ),
+                      ],
+                    )),
+                const SizedBox(height: 10.0),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            Fluttertoast.showToast(
+                                msg: "Connexion réussie",
+                                toastLength: Toast.LENGTH_LONG,
+                                gravity: ToastGravity.TOP,
+                                backgroundColor: Colors.black,
+                                textColor: Colors.yellow,
+                                fontSize: 16.0);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OrgPage(
+                                          firstname: "",
+                                          lastname: "",
+                                        )));
+                          }
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.yellow), // Couleur du bouton
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                              Colors.black), // Couleur du texte
+                          padding:
+                              MaterialStateProperty.all<EdgeInsetsGeometry>(
+                            EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 10.0),
+                          ), // Espacement interne
+                          shape: MaterialStateProperty.all<OutlinedBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  10.0), // Bordure arrondie
+                            ),
+                          ),
+                        ),
+                        child: const Text("Valider")),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10.0,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    CreateOrg())); // Renvoie sur la page de création de profil Organisateur
+                      },
+                      style: ButtonStyle(
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                            Colors.blue), // Couleur du texte
+                      ),
+                      child: const Text('Créer un profil Organisateur'),
+                    ),
+                  ],
+                )
+              ],
+            )
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: "Accueil",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.payment),
+              label : "Ticket",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: "Profil",
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          selectedItemColor: Colors.white,
+          onTap: _redirectPage,
+        ),
+      ),
+    );
+  }
+}
+
+-------------------------------------------------
+
+#CreateOrg.dart // Formulaire de création d'un Organisateur 
+
+import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:admin_base/OrgAuth/OrgPage.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
+
+class CreateOrg extends StatefulWidget {
+  const CreateOrg({super.key});
+
+  @override
+  State<CreateOrg> createState() => _CreateOrgState();
+}
+
+class _CreateOrgState extends State<CreateOrg> {
+  final profKey = GlobalKey<FormState>();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController prenomController = TextEditingController();
+
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController passwordConfirmController =
+      TextEditingController();
+  final GlobalKey<FormBuilderState> birthKey = GlobalKey<FormBuilderState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark(),
+      home: Scaffold(
+          appBar: AppBar(
+            title: Text("Créer un profil organisateur"),
+            backgroundColor: Colors.yellow,
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Form(
+                      key: profKey,
+                      child: Column(
+                        children: [
+                          //Nom
+                          TextFormField(
+                            keyboardType: TextInputType.text,
+                            controller: nameController,
+                            decoration: InputDecoration(
+                              hintText: "Tapez votre nom",
+                              labelText: "Nom",
+                            ),
+                            validator: (String? value) {
+                              return (value == null || value == "")
+                                  ? "Ce champ est obligatoire"
+                                  : null;
+                            },
+                          ),
+                          //Prénom
+                          TextFormField(
+                            keyboardType: TextInputType.text,
+                            controller: prenomController,
+                            decoration: InputDecoration(
+                              hintText: "Tapez votre prénom",
+                              labelText: "Prénom",
+                            ),
+                            validator: (String? value) {
+                              return (value == null || value == "")
+                                  ? "Ce champ est obligatoire"
+                                  : null;
+                            },
+                          ),
+                          //Date de naissance
+                          FormBuilder(
+                              key: birthKey,
+                              child: Column(
+                                children: [
+                                  FormBuilderDateTimePicker(
+                                    name: 'Date d\'anniversaire',
+                                    inputType: InputType.date,
+                                    //format: DateFormat('dd-MM-yyyy'),
+                                    decoration: InputDecoration(
+                                      labelText: "Date d'anniversaire",
+                                    ),
+                                  ),
+                                ],
+                              )),
+                          //Mot de passe
+                          TextFormField(
+                            keyboardType: TextInputType.text,
+                            controller: passwordController,
+                            decoration: InputDecoration(
+                              hintText:
+                                  "Tapez une chaîne de caractères", //d'au moins 8 caractères comportant des caractères spéciaux",
+                              labelText: "Mot de passe",
+                            ),
+                            validator: (String? value) {
+                              return (value == null || value == "")
+                                  ? "Ce champ est obligatoire"
+                                  : null;
+                            },
+                          ),
+                          //Confirmation de mot de passe
+                          TextFormField(
+                            keyboardType: TextInputType.text,
+                            controller: passwordConfirmController,
+                            decoration: InputDecoration(
+                              labelText: "Confirmer votre mot de passe",
+                            ),
+                            validator: (String? value) {
+                                if(value == null || value == "")
+                                  {
+                                    return "Ce champ est obligatoire";
+                                  }
+                                else if(value!=passwordController.text){
+                                  return "Les mots de passe ne correspondent pas";
+                                }
+                                return null;
+                            },
+                          ),
+                        ],
+                      )),
+                  const SizedBox(height: 10.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () async {
+                            if (profKey.currentState!.validate()) {
+                              WidgetsFlutterBinding.ensureInitialized();
+                              Fluttertoast.showToast(
+                                  msg: "Compte Organisateur créé avec succès",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.TOP,
+                                  backgroundColor: Colors.black,
+                                  textColor: Colors.yellow,
+                                  fontSize: 16.0);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OrgPage(
+                                        firstname: prenomController.text,
+                                        lastname: nameController.text)),
+                              );
+                            }
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Colors.yellow), // Couleur du bouton
+                            foregroundColor: MaterialStateProperty.all<Color>(
+                                Colors.black), // Couleur du texte
+                            padding:
+                                MaterialStateProperty.all<EdgeInsetsGeometry>(
+                              EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 10.0),
+                            ), // Espacement interne
+                            shape: MaterialStateProperty.all<OutlinedBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    10.0), // Bordure arrondie
+                              ),
+                            ),
+                          ),
+                          child: Text("Valider"))
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          )),
+    );
+  }
+}
+
+-----------------------------------------
+
+#OrgPage.dart // Page de l'organisateur 
+
+import 'package:admin_base/OrgAuth/modifyOrg.dart';
+import 'package:flutter/material.dart';
+import 'package:admin_base/OrgEvent/CreateEvent.dart';
+import 'FormChangePSWD.dart';
+//import 'CreateOrg.dart';
+
+class OrgPage extends StatefulWidget {
+  final String lastname;
+  final String firstname;
+  OrgPage({required this.lastname, required this.firstname, super.key});
+
+  @override
+  State<OrgPage> createState() => _OrgPageState();
+}
+
+class _OrgPageState extends State<OrgPage> {
+
+  int _selectedIndex=0;
+
+  void _redirectPage(int index){
+    /*Doit rediriger sur une page en fonction de l'index
+    Exemple:
+    if(index==0){
+      Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context)=>CreateOrg())
+       );
+      }*/
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.dark(),
+        home: Scaffold(
+          appBar: AppBar(),
+          body: SingleChildScrollView(
+              child: Column(
+            children: [
+              CircleAvatar(
+                radius: 40.0,
+                backgroundColor: Colors.grey,
+                child: Icon(
+                  Icons.person,
+                  size: 70.0,
+                  color: Colors.white,
+                ),
+              ),
+              const SizedBox(
+                height: 20.0,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  RichText(
+                      text: TextSpan(
+                          style: const TextStyle(
+                              color: Colors.white, fontSize: 20.0),
+                          children: [
+                        TextSpan(
+                            text: "${widget.firstname} ${widget.lastname}"),
+                      ]))
+                ],
+              ),
+              SizedBox(
+                height: 40.0,
+              ),
+              Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Row(
+                  children: <Widget>[
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CreateEvent()));
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.yellow), // Couleur du bouton
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                            Colors.black), // Couleur du texte
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                          EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 10.0),
+                        ), // Espacement interne
+                        shape: MaterialStateProperty.all<OutlinedBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(10.0), // Bordure arrondie
+                          ),
+                        ),
+                      ),
+                      child: Column(children: [
+                        Icon(Icons.add),
+                        Text("Créer un événement"),
+                      ]),
+                    ),
+                    SizedBox(
+                      width: 60.0,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        /*Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ListEvent()))*/
+                        ;
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.yellow), // Couleur du bouton
+                        foregroundColor: MaterialStateProperty.all<Color>(
+                            Colors.black), // Couleur du texte
+                        padding: MaterialStateProperty.all<EdgeInsetsGeometry>(
+                          EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 10.0),
+                        ), // Espacement interne
+                        shape: MaterialStateProperty.all<OutlinedBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.circular(10.0), // Bordure arrondie
+                          ),
+                        ),
+                      ),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.event,
+                          ),
+                          Text("Mes événements"),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    //Modifier son mot de passe
+                    Row(
+                      children: [
+                        Text("Modifier votre profil"),
+                        SizedBox(
+                          width: 65,
+                        ),
+                        IconButton(
+                            onPressed:(){
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder:(context)=>modifyOrg())
+                              );
+                            } ,
+                            icon: Icon(Icons.edit))
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      children: [
+                        Text("Changer de mot de passe"),
+                        SizedBox(
+                          width: 30,
+                        ),
+                        IconButton(
+                          onPressed:(){
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context)=>ChangePSWD())
+                            );
+                        },
+                          icon:Icon(Icons.edit)
+                        )
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        TextButton(
+                            onPressed: (){},
+                            child: Text("Termes & conditions"))
+                      ],
+                    ),
+                    Row(
+                      children: [
+                        TextButton(
+                            onPressed:(){},//Action de déconnexion
+                            child: Text("Déconnexion",style: TextStyle(
+                                decoration: TextDecoration.underline,
+                                decorationColor: Colors.yellow,
+                                color: Colors.yellow),
+                            ),
+                        ),
+                      ],
+                    )
+                  ],
+                 ),
+               ),
+              ]
+             ),
+           ),
+          bottomNavigationBar: BottomNavigationBar(
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: "Accueil",
+              ),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.payment),
+                label : "Ticket",
+              ),
+              BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                   label: "Profil",
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            selectedItemColor: Colors.white,
+            onTap: _redirectPage,
+          ),
+          ),
+      );
+   }
+}
+
+----------------------------------
+
+#ModifyOrg.dart // Page de modification du profil
+
+import 'package:flutter/material.dart';
+import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'OrgPage.dart';
+
+class modifyOrg extends StatefulWidget {
+  const modifyOrg({super.key});
+
+  @override
+  State<modifyOrg> createState() => _modifyOrgState();
+}
+
+class _modifyOrgState extends State<modifyOrg> {
+  final profKey = GlobalKey<FormState>();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController prenomController = TextEditingController();
+  final TextEditingController dateNaissanceController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController passwordConfirmController =
+      TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final GlobalKey<FormBuilderState> birthKey = GlobalKey<FormBuilderState>();
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark(),
+      home: Scaffold(
+          appBar: AppBar(
+            title: Text('Modifier votre profil'),
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Column(
+                children: [
+                  Form(
+                      key: profKey,
+                      child: Column(
+                        children: [
+                          //Nom
+                          TextFormField(
+                            keyboardType: TextInputType.text,
+                            controller: nameController,
+                            decoration: InputDecoration(
+                              hintText: "Tapez votre nom",
+                              labelText: "Nom",
+                            ),
+                            validator: (String? value) {
+                              return (value == null || value == "")
+                                  ? "Ce champ est obligatoire"
+                                  : null;
+                            },
+                          ),
+                          //Prénom
+                          TextFormField(
+                            keyboardType: TextInputType.text,
+                            controller: prenomController,
+                            decoration: InputDecoration(
+                              hintText: "Tapez votre prénom",
+                              labelText: "Prénom",
+                            ),
+                            validator: (String? value) {
+                              return (value == null || value == "")
+                                  ? "Ce champ est obligatoire"
+                                  : null;
+                            },
+                          ),
+                          //Email
+                          TextFormField(
+                            keyboardType: TextInputType.text,
+                            controller: emailController,
+                            decoration: InputDecoration(
+                              hintText: "example@gmail.com",
+                              labelText: "Adresse mail",
+                            ),
+                            validator: (String? value) {
+                              return (value == null || value == "")
+                                  ? "Ce champ est obligatoire"
+                                  : null;
+                            },
+                          ),
+                          //Date de naissance
+                          FormBuilder(
+                              key: birthKey,
+                              child: Column(
+                                children: [
+                                  FormBuilderDateTimePicker(
+                                    name: 'Date d\'anniversaire',
+                                    inputType: InputType.date,
+                                    //format: DateFormat('dd-MM-yyyy'),
+                                    decoration: InputDecoration(
+                                      labelText: "Date d'anniversaire",
+                                    ),
+                                  ),
+                                ],
+                              )
+                             ),
+                            ],
+                          )
+                        ),
+                  const SizedBox(height: 10.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      ElevatedButton(
+                          onPressed: () async {
+                            if (profKey.currentState!.validate()) {
+                              WidgetsFlutterBinding.ensureInitialized();
+                              /*final prefs =
+                                  await SharedPreferences.getInstance();
+                              prefs.setString(
+                                  "firstname",
+                                  prenomController
+                                      .text); //Stocke le prénom tapé dans le formulaire dans une variable
+                              prefs.setString(
+                                  "lastname",
+                                  nameController
+                                      .text); //Stocke le nom tapé dans le formulaire dans une variable*/
+                              Fluttertoast.showToast(
+                                  msg: "Compte Organisateur créé avec succès",
+                                  toastLength: Toast.LENGTH_LONG,
+                                  gravity: ToastGravity.TOP,
+                                  backgroundColor: Colors.black,
+                                  textColor: Colors.yellow,
+                                  fontSize: 16.0);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => OrgPage(
+                                        firstname: prenomController.text,
+                                        lastname: nameController.text)),
+                              );
+                            }
+                          },
+                          style: ButtonStyle(
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Colors.yellow), // Couleur du bouton
+                            foregroundColor: MaterialStateProperty.all<Color>(
+                                Colors.black), // Couleur du texte
+                            padding:
+                                MaterialStateProperty.all<EdgeInsetsGeometry>(
+                              EdgeInsets.symmetric(
+                                  horizontal: 20.0, vertical: 10.0),
+                            ), // Espacement interne
+                            shape: MaterialStateProperty.all<OutlinedBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    10.0), // Bordure arrondie
+                              ),
+                            ),
+                          ),
+                          child: Text("Valider"))
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          )),
+    );
+  }
+}
+----------------------------------
+FormChangePSWD.dart // Page de modification du mot de passe 
+
+import 'package:admin_base/OrgAuth/OrgPage.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+
+class ChangePSWD extends StatefulWidget {
+  const ChangePSWD ({super.key});
+
+  @override
+  State<ChangePSWD> createState() => _ChangePSWDState();
+}
+
+class _ChangePSWDState extends State<ChangePSWD> {
+
+  final pswdkey =GlobalKey<FormState>();
+  final TextEditingController oldpswd =TextEditingController();
+  final TextEditingController newpswd =TextEditingController();
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark(),
+      home:Scaffold(
+        appBar: AppBar(),
+        body: Column(
+          children: [
+            Form(
+                key:pswdkey,
+                child:Column(
+                  children: [
+                    //Ancien mot de passe
+                    TextFormField(
+                      keyboardType: TextInputType.text,
+                      controller : oldpswd,
+                      decoration: InputDecoration(
+                        labelText: "Ancien mot de passe",
+                        hintText: "Tapez votre ancien mot de passe",
+                      ),
+                    ),
+                    //Nouveau mot de passe
+                    TextFormField(
+                      keyboardType:TextInputType.text,
+                      controller: newpswd,
+                      decoration: InputDecoration(
+                        labelText: "Nouveau mot de passe",
+                        hintText: "Tapez votre nouveau mot de passe",
+                      ),
+                    ),
+                    ElevatedButton(
+                        onPressed: () async {
+                          if (pswdkey.currentState!.validate()) {
+                            WidgetsFlutterBinding.ensureInitialized();
+                            Fluttertoast.showToast(
+                                msg: "Mot de passe modifié avec succès",
+                                toastLength: Toast.LENGTH_LONG,
+                                gravity: ToastGravity.TOP,
+                                backgroundColor: Colors.black,
+                                textColor: Colors.yellow,
+                                fontSize: 16.0);
+                            /*Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => OrgPage(lastname: lastname, firstname: firstname)
+                            );*/
+                          }
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              Colors.yellow), // Couleur du bouton
+                          foregroundColor: MaterialStateProperty.all<Color>(
+                              Colors.black), // Couleur du texte
+                          padding:
+                          MaterialStateProperty.all<EdgeInsetsGeometry>(
+                            EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 10.0),
+                          ), // Espacement interne
+                          shape: MaterialStateProperty.all<OutlinedBorder>(
+                            RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                  10.0), // Bordure arrondie
+                            ),
+                          ),
+                        ),
+                        child: Text("Valider")
+                    ),
+                  ],
+                )
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+------------------------
+#CreateEvent //Page de création des événements
+
+import 'package:flutter/material.dart';
+import 'package:country_picker/country_picker.dart';
+
+class CreateEvent extends StatefulWidget {
+  const CreateEvent({super.key});
+
+  @override
+  State<CreateEvent> createState() => _CreateEventState();
+}
+
+class _CreateEventState extends State<CreateEvent> {
+  final eventKey = GlobalKey<FormState>();
+  final TextEditingController themeController = TextEditingController();
+  final TextEditingController titreController = TextEditingController();
+  final TextEditingController prixTicketController = TextEditingController();
+  final TextEditingController lieuController = TextEditingController();
+  TimeOfDay _selectedTime = TimeOfDay.now();
+  Country? _selectedCountry;
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: _selectedTime,
+    );
+
+    if (picked != null && picked != _selectedTime) {
+      setState(() {
+        _selectedTime = picked;
+      });
+    }
+  }
+
+  void _selectCountry() {
+    showCountryPicker(
+      context: context,
+      showPhoneCode: false,
+      onSelect: (Country country) {
+        setState(() {
+          _selectedCountry = country;
+        });
+      },
+    );
+  }
+
+  String? _validateRequired(String? value) {
+    return (value == null || value == "") ? "Ce champ est obligatoire" : null;
+  }
+
+  void _submitForm() {
+    if (eventKey.currentState?.validate() ?? false) {
+      // Form is valid, process the data
+      print('Thème: ${themeController.text}');
+      print('Titre: ${titreController.text}');
+      print('Prix du ticket: ${prixTicketController.text}');
+      print('Heure: $_selectedTime');
+      print('Pays: ${_selectedCountry?.name}');
+      print('Lieu: ${lieuController.text}');
+    }
+  }
+
+  int _selectedIndex = 0;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData.dark(),
+      home: Scaffold(
+          appBar: AppBar(
+            title: Text("Créer un événement"),
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: eventKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      keyboardType: TextInputType.text,
+                      controller: themeController,
+                      decoration: InputDecoration(labelText: "Thème"),
+                      validator: _validateRequired,
+                    ),
+                    const SizedBox(height: 18.0),
+                    TextFormField(
+                      keyboardType: TextInputType.text,
+                      controller: titreController,
+                      decoration: InputDecoration(labelText: "Titre"),
+                      validator: _validateRequired,
+                    ),
+                    const SizedBox(height: 18.0),
+                    TextFormField(
+                      keyboardType: TextInputType.text,
+                      controller: prixTicketController,
+                      decoration: InputDecoration(labelText: "Prix du ticket"),
+                      validator: _validateRequired,
+                    ),
+                    const SizedBox(height: 18.0),
+                    Row(
+                      //mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Text('Heure: ${_selectedTime.format(context)}',
+                            style: TextStyle(fontSize: 16)),
+                        const SizedBox(width: 65),
+                        TextButton(
+                          onPressed: () => _selectTime(context),
+                          child: Text(
+                            'Sélectionner l\'heure',
+                              style: TextStyle(
+                                fontSize: 15,
+                                decoration: TextDecoration.underline,
+                                decorationColor: Colors.yellow,
+                                color: Colors.yellow,
+                              ),
+                          ),
+                        ),
+                        //SizedBox(width: 8.0),
+                        //Text('Heure: ${_selectedTime.format(context)}',
+                        //style: TextStyle(fontSize: 16)),
+                        //$_selectedTime
+                      ],
+                    ),
+                    const SizedBox(height: 18.0),
+                    Row(
+                      children: [
+                        //Column(
+                        //crossAxisAlignment: CrossAxisAlignment.start,
+                        //children: [
+                        Text(
+                          'Pays sélectionné: ${_selectedCountry?.name}',
+                          style: TextStyle(fontSize: 18),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        TextButton(
+                          onPressed: _selectCountry,
+                          child: Text('Sélectionner un pays',
+                              style: TextStyle(
+                                fontSize: 15,
+                                decoration: TextDecoration.underline,
+                                decorationColor: Colors.yellow,
+                                color: Colors.yellow,
+                              )
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(width: 18.0),
+                    TextFormField(
+                      keyboardType: TextInputType.text,
+                      controller: lieuController,
+                      decoration: InputDecoration(labelText: "Lieu"),
+                      validator: _validateRequired,
+                    ),
+                    //],
+                    //),
+                    SizedBox(height: 18.0),
+                    ElevatedButton(
+                      onPressed: _submitForm,
+                      child: Text('Soumettre',
+                        style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.yellow,
+                       )
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          )),
+    );
+  }
+}
+ 
+
+Page de connexion_Utilisateur_Standard -> Page de connexion_Organisateur -> Page de l'organisateur -> Page de modification du profil -> Page de modification du mot de passe -> Page de création d'événement

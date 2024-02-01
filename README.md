@@ -10,7 +10,7 @@
 - **Fonctionnalité:** EventFlow permet l'achat de billets pour divers événements et autorise la création d'événements par les utilisateurs.
 
 ### Cadre Logique du Projet
-- **Objectif:** Évaluation du niveau d’assimilation des connaissances acquises dans l'UE Développement Mobile Flutter.
+- **Objectif:** Évaluation du niveau d’assimilation des connaissances acquises en Développement Mobile Flutter.
 - **Résultats Attendus:** Développement et hébergement d'une application mobile fonctionnelle de réservation de tickets d’évènements.
 - **Activités:** Répartition des tâches entre membres développeurs et designers.
 

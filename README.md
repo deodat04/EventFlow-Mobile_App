@@ -16,8 +16,7 @@
 
 ### Environnements de Développement
 - **Framework de Développement:** Flutter
-- **Back-end:** Java
-- **Base de Données:** Firebase Database
+- **Base de Données | Back-end:** Firebase Database
 - **Système de Paiement:** Kkiapay
 - **Stockage de Fichiers:** Firebase Cloud Messaging
 - **Test et Déploiement:** Android
